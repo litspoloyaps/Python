@@ -20,7 +20,7 @@ def header():
     print(GREEN + Style.BRIGHT)
     print("  ██████╗      ██████╗      ███╗   ███╗ ")
     print(" ██╔════╝      ██╔══██╗     ████╗ ████║ ")
-    print(" ██║           ██║  ██║     ██╔████╔██║   " + GREEN + "C   D   M" + RESET)
+    print(" ██║           ██║  ██║     ██╔████╔██║   " + GREEN + "Colegio   De  Montalban" + RESET)
     print(" ██║           ██║  ██║     ██║╚██╔╝██║   " + GOLD + "Registrar Queue System" + RESET)
     print(" ╚██████╗      ██████╔╝     ██║ ╚═╝ ██║   " + GOLD + "2025" + RESET)
     print("  ╚═════╝      ╚═════╝      ╚═╝     ╚═╝ ")
