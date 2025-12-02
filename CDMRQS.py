@@ -8,6 +8,7 @@ import winsound
 regular_queue = deque()
 priority_queue = deque()
 irregular_queue = deque()
+current_student = None
 
 def update_clock():
     now = datetime.datetime.now().strftime("%A | %B %d, %Y | %I:%M:%S %p")
@@ -18,20 +19,16 @@ def add_to_queue():
     student_id = id_entry.get().strip()
     name = name_entry.get().strip()
     queue_type = type_var.get()
-
     if student_id == "" or name == "":
         messagebox.showerror("Error", "Please enter both Student ID and Name")
         return
-
     data = f"{student_id} - {name}"
-
     if queue_type == "Priority":
         priority_queue.append(data)
     elif queue_type == "Irregular":
         irregular_queue.append(data)
     else:
         regular_queue.append(data)
-
     id_entry.delete(0, tk.END)
     name_entry.delete(0, tk.END)
     update_queue_display()
@@ -39,6 +36,10 @@ def add_to_queue():
     messagebox.showinfo("Added", f"Student ID: {student_id}\n{name} added to {queue_type} Queue")
 
 def serve_next():
+    global current_student
+    if current_student is not None:
+        messagebox.showinfo("Serving", "Please mark the current student as done first.")
+        return
     if priority_queue:
         next_student = priority_queue.popleft()
     elif irregular_queue:
@@ -48,11 +49,20 @@ def serve_next():
     else:
         messagebox.showwarning("Queue Offline", "No students in queue.")
         return
-
     student_id, name = next_student.split(" - ", 1)
+    current_student = next_student
     now_serving_label.config(text=f"{student_id} - {name}")
     update_queue_display()
     winsound.Beep(600, 500)
+
+def mark_done():
+    global current_student
+    if current_student is None:
+        messagebox.showinfo("Info", "No student is currently being served.")
+        return
+    messagebox.showinfo("Done", f"{current_student} has finished.")
+    current_student = None
+    now_serving_label.config(text="---")
 
 def update_queue_display():
     queue_list.delete(*queue_list.get_children())
@@ -77,7 +87,6 @@ header.pack(fill="x")
 cdm_image = Image.open("cdm.jpg")
 cdm_image = cdm_image.resize((90, 90))
 cdm_logo = ImageTk.PhotoImage(cdm_image)
-
 logo_label = tk.Label(header, image=cdm_logo, bg="#0c3b2e")
 logo_label.pack(side="left", padx=20)
 
@@ -121,7 +130,10 @@ now_serving_label = tk.Label(now_frame, text="---", font=("Arial Black", 32), bg
 now_serving_label.pack(pady=5)
 
 serve_btn = tk.Button(root, text="SERVE NEXT", font=("Arial Black", 14), bg="green", fg="white", width=20, command=serve_next)
-serve_btn.pack(pady=10)
+serve_btn.pack(pady=5)
+
+done_btn = tk.Button(root, text="MARK AS DONE", font=("Arial Black", 14), bg="red", fg="white", width=20, command=mark_done)
+done_btn.pack(pady=5)
 
 table_frame = tk.Frame(root)
 table_frame.pack(pady=20)
