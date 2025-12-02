@@ -15,6 +15,8 @@ RESET = Style.RESET_ALL
 def clear_screen():
     os.system("cls" if os.name == "nt" else "clear")
 
+def pause():
+    input(f"{INFO}Press Enter to continue...{RESET}")
 
 def header():
     print(GREEN + Style.BRIGHT)
@@ -26,7 +28,6 @@ def header():
     print("  ╚═════╝      ╚═════╝      ╚═╝     ╚═╝ ")
     print(GREEN + "──────────────────────────────────────────────" + RESET)
     print()
-
 
 class RegistrarQueue:
     def __init__(self):
@@ -43,6 +44,7 @@ class RegistrarQueue:
 
         student = self.queue.popleft()
         print(f"{GOLD}[⟲] Now serving: {student['id']} - {student['name']}{RESET}\n")
+        pause()
 
     def view_queue(self):
         if not self.queue:
@@ -75,27 +77,26 @@ def main():
             student_id = input(f"{INFO}Enter Student ID: {RESET}").strip()
             name = input(f"{INFO}Enter Student Name: {RESET}").strip()
             system.add_student(student_id, name)
-            time.sleep(1)
+            pause()
 
         elif choice == "2":
             system.serve_student()
-            time.sleep(1)
+            pause()
 
         elif choice == "3":
             clear_screen()
             header()
             system.view_queue()
-            input(f"{INFO}Press Enter to return to menu...{RESET}")
+            pause()
 
         elif choice == "4":
             print(f"{ERROR}Goodbye! Thank you for using the Registrar System.{RESET}")
+            pause()
             break
 
         else:
             print(f"{ERROR}[!] Invalid option. Try again.{RESET}\n")
-            time.sleep(1)
-
+            pause()
 
 if __name__ == "__main__":
     main()
-
